@@ -1,33 +1,75 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+
+import { useEffect, useState } from 'react'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [socket, setSocket] = useState<null | WebSocket>(null);
+  const [messages, setMessages] = useState<string[]>([]);
+  const [inputMessage, setInputMessage] = useState<string>("");
+
+  useEffect(() => {
+    const sockett = new WebSocket('ws://localhost:8080');
+    sockett.onopen = () => {
+      console.log("Connected ")
+      setSocket(sockett);
+    }
+    sockett.onmessage = (message) => {
+      console.log('Received message:', message.data);
+      setMessages(prevMessages => [...prevMessages, message.data])
+    }
+
+
+    return () => {
+      console.log('Closing WebSocket connection');
+      sockett.close();
+    };
+
+  }, [])
+
+
+  const sendMessages = () => {
+
+    if (socket && inputMessage.trim()) {
+      console.log(`Sending message: ${inputMessage}`)
+      socket?.send(inputMessage)
+      setInputMessage('')
+    }
+  }
+
+  if (!socket) {
+    return <div>
+      Connecting to socket server ....
+    </div>
+  }
 
   return (
     <>
       <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        <input
+          type='text'
+          onChange={(e) =>
+            setInputMessage(e.target.value)
+          }
+          placeholder='Type your message'
+        />
+        <button onClick={sendMessages}>SEND</button>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+
+      <div>
+        <h2>Messages:</h2>
+        <ul>
+          {
+            messages.map((msg, idx) => (
+              <li key={idx}>
+                <div>
+                  {msg}
+                </div>
+              </li>
+            ))
+
+          }
+        </ul>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
   )
 }
