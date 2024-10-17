@@ -30,7 +30,7 @@ const ws_1 = __importStar(require("ws"));
 const http_1 = __importDefault(require("http"));
 const server = http_1.default.createServer(function (request, response) {
     console.log((new Date()) + 'Received request for' + request.url);
-    response.end("hii there");
+    response.end("hii there Web Socket servwer is running");
 });
 const wss = new ws_1.WebSocketServer({ server });
 wss.on('connection', function connection(ws) {

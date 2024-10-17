@@ -14,10 +14,12 @@ function App() {
       setSocket(sockett);
     }
     sockett.onmessage = (message) => {
-      console.log('Received message:', message.data);
       setMessages(prevMessages => [...prevMessages, message.data])
     }
 
+    sockett.onerror = (err) => {
+      console.log("Web socket connection Error: ", err)
+    }
 
     return () => {
       console.log('Closing WebSocket connection');
@@ -44,31 +46,29 @@ function App() {
 
   return (
     <>
-      <div>
-        <input
-          type='text'
-          onChange={(e) =>
-            setInputMessage(e.target.value)
-          }
-          placeholder='Type your message'
-        />
-        <button onClick={sendMessages}>SEND</button>
-      </div>
+      <div className="chat-app">
+        <h2>WebSocket Chat</h2>
+        <div className="chat-window">
+          {messages.length > 0 ? (
+            <ul>
+              {messages.map((msg, index) => (
+                <li key={index}>{msg}</li>
+              ))}
+            </ul>
+          ) : (
+            <p>No messages yet...</p>
+          )}
+        </div>
 
-      <div>
-        <h2>Messages:</h2>
-        <ul>
-          {
-            messages.map((msg, idx) => (
-              <li key={idx}>
-                <div>
-                  {msg}
-                </div>
-              </li>
-            ))
-
-          }
-        </ul>
+        <div className="message-input">
+          <input
+            type="text"
+            value={inputMessage}
+            onChange={(e) => setInputMessage(e.target.value)}
+            placeholder="Type a message..."
+          />
+          <button onClick={sendMessages}>Send</button>
+        </div>
       </div>
     </>
   )

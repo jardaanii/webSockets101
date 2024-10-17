@@ -11,9 +11,11 @@
   will-change: filter;
   transition: filter 300ms;
 }
+
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
+
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
@@ -22,6 +24,7 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -39,4 +42,40 @@
 
 .read-the-docs {
   color: #888;
+}
+
+.chat-app {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+}
+
+.chat-window {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 20px;
+  height: 200px;
+  overflow-y: scroll;
+}
+
+.message-input {
+  display: flex;
+  align-items: center;
+}
+
+.message-input input {
+  width: 80%;
+  padding: 10px;
+  margin-right: 10px;
+}
+
+.message-input button {
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.message-input button:hover {
+  background-color: #0056b3;
 }
